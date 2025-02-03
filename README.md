@@ -20,6 +20,10 @@ Text editor app built in Electron, no solid plans apart from the following list:
 - 🟥 **Tabs/Multiple Documents:** Ability to open and edit multiple documents in tabs.
 - 🟥 **Export as PDF/HTML:** Export notes into different formats.
 - 🟧 **Keyboard Shortcuts:** Common shortcuts for faster editing (Ctrl+S for save, Ctrl+F for find, etc.).
+
+## Figma UI Prototype
+![Figma](https://github.com/user-attachments/assets/77461df6-1ce9-4cb0-ab6a-34518e49edf6)
+
 ## Authors
 
 - [@teethfrog](https://github.com/teethfrog)
