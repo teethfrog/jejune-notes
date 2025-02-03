@@ -1,58 +1,63 @@
 /** Code for UI rendering, button clicks and more. (front-end logic) */
 
-// opens File Browser
-document.getElementById('openFileButton').addEventListener('click', async () => {
+function openFile() {
     console.log('Renderer clicked openFileButton');
-    const fileData = await window.electron.openFile();
-    if (fileData) {
-        document.getElementById("textbox").innerHTML = fileData.content;
-        document.getElementById("currentFilePath").innerText = fileData.path;
-    } else {
-        console.log('No file selected');
-    }
-});
+    window.electron.openFile().then(fileData => {
+        if (fileData) {
+            document.getElementById("textbox").innerHTML = fileData.content;
+            document.getElementById("currentFilePath").innerText = fileData.path;
+        } else {
+            console.log('No file selected');
+        }
+    });
+}
 
-// Saves a file (either to current path or as new file.)
-document.getElementById('saveFileButton').addEventListener('click', async () => {
+function saveFile() {
     const content = document.getElementById("textbox").innerHTML;
     const currentFilePath = document.getElementById("currentFilePath").innerText;
     if (currentFilePath) {
         console.log("path provided");
         const filePathString = currentFilePath.toString();
-        await window.electron.saveFile(content, filePathString);
-
+        window.electron.saveFile(content, filePathString);
     } else {
         console.log("path not provided");
-        await window.electron.saveFileAs(content);
+        window.electron.saveFileAs(content);
     }
-});
-// Updates currentFilePath after file has been saved.
-window.electron.onFileSaved((event, filePath) => {
-    document.getElementById("currentFilePath").innerText = filePath;
-});
+}
 
 // Clears text area and current path.
-document.getElementById('clear').addEventListener('click', async () => {
+function clearFile() {
     const content = document.getElementById("textbox");
     const currentFilePath = document.getElementById("currentFilePath");
 
     content.innerHTML = null;
     currentFilePath.innerText = null;
-})
+}
+
+/**  document.getElementById('clear').addEventListener('click', clearFile);
+document.getElementById('openFileButton').addEventListener('click', openFile);
+document.getElementById('saveFileButton').addEventListener('click', saveFile); */
+
+// Updates currentFilePath after file has been saved.
+window.electron.onFileSaved((event, filePath) => {
+    document.getElementById("currentFilePath").innerText = filePath;
+});
+
+
 
 document.addEventListener('keydown', function(event) {
     switch (true) {
         case event.ctrlKey && event.key === 's':
             event.preventDefault();
-            document.getElementById('saveFileButton').click();
+            saveFile();
             break;
         case event.ctrlKey && event.key === 'o':
             event.preventDefault();
-            document.getElementById('openFileButton').click();
+            openFile();
             break;
         case event.ctrlKey && event.key === 'n':
             event.preventDefault();
-            document.getElementById('clear').click();
+            clearFile();
             break;
         case event.ctrlKey && event.key === 'w':
             event.preventDefault();
@@ -76,3 +81,19 @@ setInterval(async () => {
         console.log("No path provided, won't auto-save.")
     }
 }, 60000);
+
+function closeWindow() {
+    window.electron.closeWindow();
+}
+
+function minimizeWindow() {
+    window.electron.minimizeWindow();
+}
+
+function toggleMaximizeWindow() {
+    window.electron.toggleMaximizeWindow();
+}
+
+document.getElementById('closeButton').addEventListener('click', closeWindow);
+document.getElementById('hideButton').addEventListener('click', minimizeWindow);
+document.getElementById('maximizeButton').addEventListener('click', toggleMaximizeWindow);

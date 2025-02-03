@@ -10,7 +10,7 @@ Text editor app built in Electron, no solid plans apart from the following list:
 - 🟩 **Word Wrap:** Toggle line wrapping so text doesn’t run off the screen.
 - Character/Word Count: Display a count of characters, words, or lines in the document.
 - 🟥 **Line and Column Numbers:** Show the current line and column number of the cursor position.
-- 🟥 **Status Bar:** A footer bar showing information like file path, text encoding, or cursor position.
+- 🟧 **Status Bar:** A footer bar showing information like file path, text encoding, or cursor position.
 - 🟩 **Auto-Save:** Automatically save the document at regular intervals to prevent data loss.
 - 🟥 **Dark/Light Mode:** Toggle between light and dark themes for user preference and eye comfort.
 

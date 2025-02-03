@@ -7,13 +7,23 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <pre id="currentFilePath"></pre>
+    <div class="navbar"> 
+        <img src="../../public/logo.ico" alt="Jejune Logo" class="logo">
+        <pre id="currentFilePath"></pre>
+        <div class="navButtons">
+            <button id="hideButton" class="navButton"></button>
+            <button id="maximizeButton" class="navButton"></button>
+            <button id="closeButton" class="navButton"></button>
+        </div>
+    </div>
     <div class="editor" id="textbox" contenteditable="true"></div>
+    <!--
     <div class="buttons">
         <button id="openFileButton">Open File</button>
         <button id="saveFileButton">Save</button>
         <button id="clear">Clear</button>
     </div>
+    -->
     <script src="index.js"></script>
   </body>
 </html>

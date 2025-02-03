@@ -1,6 +1,6 @@
 /** Setup code & Anything related to application's windows and background operations (e.g. file system access, handling app events.)  */
 
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, Tray, Menu, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -8,6 +8,7 @@ function createWindow() {
     const mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
+        frame: false,
         webPreferences: {
             preload: path.join(__dirname, '..', 'preload', 'preload.js'),
             contextIsolation: true,
@@ -16,6 +17,31 @@ function createWindow() {
     });
 
     mainWindow.loadURL(`file://${path.join(__dirname, '../renderer/index.html')}`);
+
+    ipcMain.on('window:close', () => {
+        mainWindow.close();
+    });
+
+    ipcMain.on('window:minimize', () => {
+        mainWindow.minimize();
+    });
+
+    ipcMain.on('toggle-maximize-window', (event) => {
+        if (mainWindow.isMaximized()) {
+            mainWindow.unmaximize(); 
+        } else {
+            mainWindow.maximize(); 
+        }
+        event.sender.send('window-maximized-status', mainWindow.isMaximized());
+    });
+
+    mainWindow.on('maximize', () => {
+        mainWindow.webContents.send('window-maximized-status', true);
+    });
+
+    mainWindow.on('unmaximize', () => {
+        mainWindow.webContents.send('window-maximized-status', false);
+    });
 }
 
 ipcMain.handle('dialog:openFile', async () => {
