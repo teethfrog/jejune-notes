@@ -6,8 +6,10 @@ const fs = require('fs');
 
 function createWindow() {
     const mainWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 925,
+        height: 565,
+        minWidth: 512,
+        minHeight: 135,
         frame: false,
         webPreferences: {
             preload: path.join(__dirname, '..', 'preload', 'preload.js'),

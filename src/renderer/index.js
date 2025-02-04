@@ -1,11 +1,40 @@
 /** Code for UI rendering, button clicks and more. (front-end logic) */
 
+function updateLineNumbers() {
+    const element = document.getElementById("textbox");
+    const range = document.createRange();
+    range.selectNodeContents(element);
+    const rects = Array.from(range.getClientRects());
+
+    rects.sort((a, b) => a.top - b.top);
+
+    const uniqueLines = [];
+    let lastTop = null;
+
+    for (const rect of rects) {
+        if (lastTop === null || Math.abs(rect.top - lastTop) > 2) {
+            uniqueLines.push(rect.top);
+            lastTop = rect.top;
+        }
+    }
+
+    const lineNumbers = ["1", ...uniqueLines.slice(1).map((_, index) => index + 2)].join("\n");
+    document.getElementById("lineCounter").innerText = lineNumbers;
+}
+
+
+document.getElementById("textbox").addEventListener("input", updateLineNumbers);
+document.getElementById("textbox").addEventListener("keydown", updateLineNumbers);
+document.getElementById("textbox").addEventListener("paste", updateLineNumbers);
+
+
 function openFile() {
     console.log('Renderer clicked openFileButton');
     window.electron.openFile().then(fileData => {
         if (fileData) {
             document.getElementById("textbox").innerHTML = fileData.content;
             document.getElementById("currentFilePath").innerText = fileData.path;
+            updateLineNumbers();
         } else {
             console.log('No file selected');
         }
@@ -25,6 +54,12 @@ function saveFile() {
     }
 }
 
+function saveFileAs() {
+    const content = document.getElementById("textbox").innerHTML;
+    console.log("path not provided");
+    window.electron.saveFileAs(content);
+}
+
 // Clears text area and current path.
 function clearFile() {
     const content = document.getElementById("textbox");
@@ -32,6 +67,7 @@ function clearFile() {
 
     content.innerHTML = null;
     currentFilePath.innerText = null;
+    updateLineNumbers();
 }
 
 /**  document.getElementById('clear').addEventListener('click', clearFile);
@@ -45,11 +81,15 @@ window.electron.onFileSaved((event, filePath) => {
 
 
 
-document.addEventListener('keydown', function(event) {
+document.addEventListener('keydown', function (event) {
     switch (true) {
         case event.ctrlKey && event.key === 's':
             event.preventDefault();
             saveFile();
+            break;
+        case event.ctrlKey && event.shiftKey && event.key === 'S':
+            event.preventDefault();
+            saveFileAs();
             break;
         case event.ctrlKey && event.key === 'o':
             event.preventDefault();
@@ -59,9 +99,23 @@ document.addEventListener('keydown', function(event) {
             event.preventDefault();
             clearFile();
             break;
-        case event.ctrlKey && event.key === 'w':
+        case event.ctrlKey && event.key === '/':
             event.preventDefault();
-            console.log("hotkeys modal open");
+            const modal = document.getElementById('modal');
+            if (modal.classList.contains('visible')) {
+                modal.classList.remove('visible');  // Make modal invisible
+            } else {
+                modal.classList.add('visible');  // Make modal visible
+            }
+            document.getElementById('textbox').blur();
+            break;
+        case event.key === 'Escape':
+            const modalEscape = document.getElementById('modal');
+            if (modalEscape.classList.contains('visible')) {
+                modalEscape.classList.remove('visible');  // Make modal invisible
+            }
+            break;
+
     }
 });
 
@@ -69,7 +123,7 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('textbox').focus();
 });
 
-// Auto-save every minute
+/**   Auto-save every minute
 setInterval(async () => {
     const content = document.getElementById("textbox").innerHTML;
     const currentFilePath = document.getElementById("currentFilePath").innerText;
@@ -80,7 +134,7 @@ setInterval(async () => {
     } else {
         console.log("No path provided, won't auto-save.")
     }
-}, 60000);
+}, 60000); */
 
 function closeWindow() {
     window.electron.closeWindow();
@@ -92,8 +146,31 @@ function minimizeWindow() {
 
 function toggleMaximizeWindow() {
     window.electron.toggleMaximizeWindow();
+
 }
+
+const currentFilePath = document.getElementById('currentFilePath');
+
+function checkWidthAndAnimate() {
+    if (window.innerWidth < 750) {
+        currentFilePath.classList.add('invisible');
+    } else {
+        currentFilePath.classList.remove('invisible');
+    }
+}
+
 
 document.getElementById('closeButton').addEventListener('click', closeWindow);
 document.getElementById('hideButton').addEventListener('click', minimizeWindow);
 document.getElementById('maximizeButton').addEventListener('click', toggleMaximizeWindow);
+window.addEventListener('resize', updateLineNumbers);
+window.addEventListener('resize', checkWidthAndAnimate);
+
+document.addEventListener('DOMContentLoaded', function () {
+    const editor = document.querySelector('.editor');
+    const lineCounter = document.querySelector('.lineCounter');
+
+    editor.addEventListener('scroll', function () {
+        lineCounter.scrollTop = editor.scrollTop;
+    });
+});
