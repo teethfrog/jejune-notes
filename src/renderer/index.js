@@ -103,18 +103,28 @@ document.addEventListener('keydown', function (event) {
             event.preventDefault();
             const modal = document.getElementById('modal');
             if (modal.classList.contains('visible')) {
-                modal.classList.remove('visible');  // Make modal invisible
+                modal.classList.remove('visible'); 
             } else {
-                modal.classList.add('visible');  // Make modal visible
+                modal.classList.add('visible'); 
             }
             document.getElementById('textbox').blur();
             break;
         case event.key === 'Escape':
             const modalEscape = document.getElementById('modal');
             if (modalEscape.classList.contains('visible')) {
-                modalEscape.classList.remove('visible');  // Make modal invisible
+                modalEscape.classList.remove('visible');  
             }
             break;
+        case event.ctrlKey && event.key === 'f':
+            console.log("ctrl + f");
+            event.preventDefault();
+            const searchModal = document.getElementById('searchModal');
+            if (searchModal.classList.contains('visible')) {
+                searchModal.classList.remove('visible');
+            } else {
+                searchModal.classList.add('visible'); 
+                document.getElementById('searchInput').focus();
+            }
 
     }
 });
@@ -174,3 +184,41 @@ document.addEventListener('DOMContentLoaded', function () {
         lineCounter.scrollTop = editor.scrollTop;
     });
 });
+
+let matchIndex = -1;
+let matches = [];
+
+function searchWord() {
+    const searchInput = document.getElementById("searchInput").value.trim();
+    const textbox = document.getElementById("textbox");
+    const searchResults = document.getElementById("searchResults");
+
+    const originalContent = textbox.innerHTML.replace(/<span class="highlight">(.*?)<\/span>/gi, "$1");
+
+    if (searchInput === "") {
+        textbox.innerHTML = originalContent;
+        searchResults.innerText = "0";
+        matchIndex = -1;
+        matches = [];
+        return;
+    }
+
+
+    const escapedInput = searchInput.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const regex = new RegExp(escapedInput, "gi");
+
+    const result = originalContent.match(regex);
+    const resultSize = result ? result.length : 0;
+
+    if (resultSize > 0) {
+        const highlightedContent = originalContent.replace(regex, match => `<span class="highlight">${match}</span>`);
+        textbox.innerHTML = highlightedContent;
+    } else {
+        textbox.innerHTML = originalContent; 
+    }
+
+    searchResults.innerText = resultSize;
+}
+
+
+document.getElementById("searchInput").addEventListener("input", searchWord);

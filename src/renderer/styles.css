@@ -57,7 +57,6 @@ button {
     width: 30px;
     background-color: #26262600;
     height: calc(100% - 30px);
-    bottom: 0;
     line-height: 1.6;
     font-family: 'IBM Plex Mono Medium', monospace;
     font-size: 15px;
@@ -100,16 +99,9 @@ button {
     color: white;
     position: relative;
     top: 3px;
+    -moz-user-drag: none;
     user-select: none;
-    -webkit-app-region: no-drag;
-    transition: opacity 0.2s ease-out; 
-    opacity: 1;  
 }
-
-#currentFilePath.invisible {
-    opacity: 0;
-}
-
 
 .navButtons {
     position: absolute;
@@ -129,19 +121,18 @@ button {
 }
 
 #hideButton {
-    background-color: #FF8000
+    background-color: rgb(243, 243, 77);
 }
 
 #maximizeButton {
-    background-color: #64e94a
+    background-color: rgb(19, 179, 19);
 }
 
 #closeButton {
-    background-color: #FF0000
+    background-color: rgb(255, 49, 49);
 }
 
 
-/** MODAL */
 
 .modal {
     position: fixed;
@@ -162,6 +153,7 @@ button {
     opacity: 1;
     visibility: visible; 
     transition: opacity 0.2s ease-out, visibility 0s 0s; 
+    pointer-events: auto;
 }
 
 .modal-content {
@@ -227,4 +219,56 @@ button {
 
 .modal-content::-webkit-scrollbar-track {
     background: transparent;
+}
+
+.searchModal {
+    position: fixed;
+    display: flex;
+    right: 50px;
+    top: 0px;
+    width: 300px; 
+    height: 30px;
+    overflow: hidden; 
+    background-color: #1D1D1D;
+    transition: top 0.3s ease-in-out;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.searchModal.visible {
+    top: 30px;
+}
+
+#searchInput {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 60%;
+    height: 100%;
+    border: none;
+    background-color: transparent;
+    color: white;
+    font-family: 'IBM Plex Mono Medium', monospace;
+    font-size: 14px;
+    padding: 5px;
+    outline: none;
+}
+
+#searchResults {
+    position: absolute;
+    top: -7px;
+    right: 10px;
+    color: white;
+    font-family: 'IBM Plex Mono Medium', monospace;
+    font-size: 14px;
+    text-align: right;
+}
+
+.highlight {
+    background-color: rgba(65, 65, 65, 0.479);
+}
+
+.highlight.active {
+    background-color: rgba(87, 142, 224, 0.479);
 }

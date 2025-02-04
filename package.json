@@ -4,12 +4,23 @@
   "description": "Jejune - dry and uninteresting.",
   "main": "src/main/main.js",
   "scripts": {
-    "start": "electron src/main/main.js"
+    "start": "electron src/main/main.js",
+    "dist": "electron-builder"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^34.0.2"
+    "electron": "^34.0.2",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.teethfrog.jejune",
+    "productName": "Jejune*",
+    "win": {
+      "target": "nsis",
+      "defaultArch": "x64",
+      "icon": "F:/Projects/Coding/jejune-notes/public/logo.ico"
+    }
   }
 }

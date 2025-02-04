@@ -15,7 +15,8 @@ function createWindow() {
             preload: path.join(__dirname, '..', 'preload', 'preload.js'),
             contextIsolation: true,
             nodeIntegration: false
-        }
+        },
+        icon: path.join(__dirname, 'public', 'logo.ico')
     });
 
     mainWindow.loadURL(`file://${path.join(__dirname, '../renderer/index.html')}`);
