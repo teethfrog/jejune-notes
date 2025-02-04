@@ -1,6 +1,9 @@
 ## Jejune* Text editor project
 
-Text editor app built in Electron, no solid plans apart from the following list:
+Simple Text editor app built in Electron.
+
+## Current UI
+![CurrentUI](https://github.com/user-attachments/assets/8e48ef54-4c1a-49b7-a623-d4c02119af4b)
 
 ## Main Features
 - 🟩 **Create, Open, and Save Files:** Basic file operations to create new notes, open existing ones, and save changes. 
@@ -21,8 +24,7 @@ Text editor app built in Electron, no solid plans apart from the following list:
 - 🟧 **Export as PDF/HTML:** ~~Export notes into different formats.~~ Able to change format while saving file.
 - 🟧 **Keyboard Shortcuts:** Common shortcuts for faster editing (Ctrl+S for save, Ctrl+F for find, etc.).
 
-## Figma UI Prototype
-![Figma](https://github.com/user-attachments/assets/77461df6-1ce9-4cb0-ab6a-34518e49edf6)
+
 
 ## Authors
 
