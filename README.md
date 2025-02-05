@@ -11,7 +11,7 @@ Simple Text editor app built in Electron.
 - 🟧 **Text Formatting:** Options for changing font style, size, and weight (bold, italic, underline).
 - 🟧 **Find and Replace:** Quickly search for words or phrases and replace them within the text.
 - 🟩 **Word Wrap:** Toggle line wrapping so text doesn’t run off the screen.
-- 🟥 **Character/Word Count:** Display a count of characters, words, or lines in the document.
+- 🟩 **Character/Word Count:** ~~Display a count of characters, words, or lines in the document.~~ Dispalys character count in the top left.
 - 🟩 **Line and Column Numbers:** ~~Show the current line and column number of the cursor position.~~ Implemented as Line Column. 
 - 🟧 **Status Bar:** A footer bar showing information like file path, text encoding, or cursor position.
 - ~~🟩 **Auto-Save:** Automatically save the document at regular intervals to prevent data loss.~~ Currently turned off but works.

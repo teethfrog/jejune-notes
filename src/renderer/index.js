@@ -35,6 +35,7 @@ function openFile() {
             document.getElementById("textbox").innerHTML = fileData.content;
             document.getElementById("currentFilePath").innerText = fileData.path;
             updateLineNumbers();
+            countChar();
         } else {
             console.log('No file selected');
         }
@@ -125,9 +126,11 @@ document.addEventListener('keydown', function (event) {
             const searchModal = document.getElementById('searchModal');
             if (searchModal && searchModal.classList.contains('visible')) {
                 searchModal.classList.remove('visible');
-                document.getElementById('searchInput').value = '';
                 removeHighlights();
-                document.getElementById('searchResults').innerText = '0';
+                setTimeout(() => {
+                    document.getElementById('searchResults').innerText = null;
+                    document.getElementById('searchInput').value = '';
+                  }, 500);
             } else if (searchModal) {
                 searchModal.classList.add('visible');
                 document.getElementById('searchInput').focus();
@@ -227,7 +230,7 @@ function searchWord() {
     originalContent = textbox.innerHTML;
 
     if (searchInput === "") {
-        searchResults.innerText = "0";
+        searchResults.innerText = "";
         matchIndex = -1;
         matches = [];
         return;
@@ -246,7 +249,7 @@ function searchWord() {
         matchIndex = 0;
     }
 
-    searchResults.innerText = resultSize > 0 ? `Matches: ${resultSize}` : "0";
+    searchResults.innerText = resultSize > 0 ? `Matches: ${resultSize}` : "Matches: 0";
 }
 
 function moveToMatch(direction) {
@@ -270,3 +273,30 @@ function moveToMatch(direction) {
 }
 
 document.getElementById("searchInput").addEventListener("input", searchWord);
+
+/*document.addEventListener('mouseup', function() {
+    const selection = window.getSelection();
+    const selectedText = selection.toString();
+
+    if (selectedText) {
+        const selectedTextLocation = selection.getRangeAt(0);
+
+        console.log('Text selected:', selectedText);
+        console.log('Selection location:', selectedTextLocation);
+
+
+        const startOffset = selectedTextLocation.startOffset;
+        const endOffset = selectedTextLocation.endOffset;
+
+        console.log('Start offset:', startOffset);
+        console.log('End offset:', endOffset);
+        
+    }
+});*/
+
+function countChar() {
+    document.getElementById("textStats").innerText = "Characters: " + document.getElementById("textbox").innerHTML.length;
+}
+
+document.getElementById("textbox").addEventListener("input", countChar);
+
