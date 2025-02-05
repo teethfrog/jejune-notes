@@ -20,7 +20,7 @@
     "win": {
       "target": "nsis",
       "defaultArch": "x64",
-      "icon": "F:/Projects/Coding/jejune-notes/public/logo.ico"
+      "icon": "public/logo.ico"
     }
   }
 }

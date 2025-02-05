@@ -79,7 +79,11 @@ window.electron.onFileSaved((event, filePath) => {
     document.getElementById("currentFilePath").innerText = filePath;
 });
 
+let searchModal;
 
+document.addEventListener("DOMContentLoaded", function () {
+    searchModal = document.getElementById("searchModal");
+});
 
 document.addEventListener('keydown', function (event) {
     switch (true) {
@@ -119,13 +123,26 @@ document.addEventListener('keydown', function (event) {
             console.log("ctrl + f");
             event.preventDefault();
             const searchModal = document.getElementById('searchModal');
-            if (searchModal.classList.contains('visible')) {
+            if (searchModal && searchModal.classList.contains('visible')) {
                 searchModal.classList.remove('visible');
-            } else {
-                searchModal.classList.add('visible'); 
+                document.getElementById('searchInput').value = '';
+                removeHighlights();
+                document.getElementById('searchResults').innerText = '0';
+            } else if (searchModal) {
+                searchModal.classList.add('visible');
                 document.getElementById('searchInput').focus();
             }
-
+            break;
+        case event.ctrlKey && event.key === 'ArrowUp':
+            console.log("Arrow UP");
+            event.preventDefault();
+            moveToMatch('prev');
+            break;
+        case event.ctrlKey && event.key === 'ArrowDown':
+            console.log("Arrow DOWN");
+            event.preventDefault();
+            moveToMatch('next');
+            break;
     }
 });
 
@@ -185,6 +202,19 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+function removeHighlights() {
+    const textbox = document.getElementById("textbox");
+    const highlightedElements = textbox.querySelectorAll(".highlight");
+
+    highlightedElements.forEach(span => {
+        const parent = span.parentNode;
+        while (span.firstChild) {
+            parent.insertBefore(span.firstChild, span);
+        }
+        parent.removeChild(span);
+    });
+}
+
 let matchIndex = -1;
 let matches = [];
 
@@ -193,32 +223,50 @@ function searchWord() {
     const textbox = document.getElementById("textbox");
     const searchResults = document.getElementById("searchResults");
 
-    const originalContent = textbox.innerHTML.replace(/<span class="highlight">(.*?)<\/span>/gi, "$1");
+    removeHighlights();
+    originalContent = textbox.innerHTML;
 
     if (searchInput === "") {
-        textbox.innerHTML = originalContent;
         searchResults.innerText = "0";
         matchIndex = -1;
         matches = [];
         return;
     }
 
-
     const escapedInput = searchInput.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const regex = new RegExp(escapedInput, "gi");
 
-    const result = originalContent.match(regex);
-    const resultSize = result ? result.length : 0;
+    matches = [...originalContent.matchAll(regex)];
+    const resultSize = matches.length;
 
     if (resultSize > 0) {
-        const highlightedContent = originalContent.replace(regex, match => `<span class="highlight">${match}</span>`);
+        let matchCounter = 0;
+        let highlightedContent = originalContent.replace(regex, match => `<span class="highlight" id="match-${matchCounter++}">${match}</span>`);
         textbox.innerHTML = highlightedContent;
-    } else {
-        textbox.innerHTML = originalContent; 
+        matchIndex = 0;
     }
 
-    searchResults.innerText = resultSize;
+    searchResults.innerText = resultSize > 0 ? `Matches: ${resultSize}` : "0";
 }
 
+function moveToMatch(direction) {
+    if (matches.length === 0) return;
+
+    if (direction === "next") {
+        matchIndex = (matchIndex + 1) % matches.length;
+    } else if (direction === "prev") {
+        matchIndex = (matchIndex - 1 + matches.length) % matches.length;
+    }
+
+    document.querySelectorAll(".highlight.active").forEach(el => el.classList.remove("active"));
+
+    const targetMatch = document.getElementById(`match-${matchIndex}`);
+    if (targetMatch) {
+        targetMatch.classList.add("active");
+        targetMatch.scrollIntoView({ behavior: "smooth", block: "center" });
+
+        document.getElementById("searchResults").innerText = `Match: ${matchIndex + 1} of ${matches.length}`;
+    }
+}
 
 document.getElementById("searchInput").addEventListener("input", searchWord);
